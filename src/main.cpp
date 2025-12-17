@@ -2,36 +2,83 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+// Size of the window:
+
+int g_windowSizeX = 1000;
+int g_windowSizeY = 500;
+
+// Change of window size:
+
+void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
+    g_windowSizeX = width;
+    g_windowSizeY = height;
+    glViewport(0, 0, g_windowSizeX, g_windowSizeY);
+}
+
+// Key assignment:
+
+void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode) {
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(pWindow, GL_TRUE);
+    }
+}
+
 int main() {
+
+    // GLFW initialization:
+
     if (!glfwInit()) {
-        std::cout << "GLFW init failed\n";
+        std::cout << "GLFW initialisation failed!" << std::endl;
         return -1;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    // GLFW required version:
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Test", nullptr, nullptr);
-    if (!window) {
-        std::cout << "Window creation failed\n";
-        glfwTerminate();
+    // Window creation:
+
+    GLFWwindow* pWindow = glfwCreateWindow(g_windowSizeX, g_windowSizeY, "Graphic engine", nullptr, nullptr);
+
+    if (!pWindow) {
+        std::cout << "Window creation failed" << std::endl;
+        glfwTerminate(); // Freeing all glfw resources.
         return -1;
     }
 
-    glfwMakeContextCurrent(window);
+    glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback); // Change window size registration.
+    glfwSetKeyCallback(pWindow, glfwKeyCallback); // Key assignment registration.
+    glfwMakeContextCurrent(pWindow); 
 
-    // Вот тут Glad инициализуется
+    // GLAD initialization:
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "GLAD init failed\n";
+        std::cout << "GLAD initialisation failed!" << std::endl;
         return -1;
     }
 
-    std::cout << "OpenGL version: " << GLVersion.major << "." << GLVersion.minor << std::endl;
+    // OpenGL version:
 
-    while (!glfwWindowShouldClose(window)) {
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+
+    glClearColor(0.56f, 0.44f, 0.0f, 1.0f);
+    
+    // Main Loop:
+
+    while (!glfwWindowShouldClose(pWindow)) {
+        // Render:
+
         glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window);
+        
+        // Double buffering:
+
+        glfwSwapBuffers(pWindow);
+        
+        // Poll and process events:
+
         glfwPollEvents();
     }
 
