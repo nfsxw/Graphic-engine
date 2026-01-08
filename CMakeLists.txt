@@ -13,6 +13,8 @@ add_executable(${PROJECT_NAME}
     src/glad.c
 )
 
+target_include_directories(GraphicEngine PRIVATE src)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     glfw
     OpenGL::GL
