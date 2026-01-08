@@ -4,8 +4,8 @@
 
 // Size of the window:
 
-int g_windowSizeX = 1000;
-int g_windowSizeY = 500;
+int g_windowSizeX = 720;
+int g_windowSizeY = 450;
 
 // Change of window size:
 
@@ -64,7 +64,7 @@ int main() {
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
-    glClearColor(0.56f, 0.44f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
     // Main Loop:
 
